@@ -5,6 +5,8 @@ apresentar o fluxo na disciplina de Engenharia de Requisitos. **Não é o app
 final:** não tem backend, banco, login de verdade nem chamada de IA. Tudo roda
 no navegador, com dados de exemplo (Ana, Desenvolvedor Front-end).
 
+**No ar:** https://trilhaai-prototipo.vercel.app
+
 ## Como rodar
 
 Precisa de Node 20 ou mais novo.
