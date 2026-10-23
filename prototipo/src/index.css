@@ -1,0 +1,31 @@
+@import "@fontsource/nunito/400.css";
+@import "@fontsource/nunito/600.css";
+@import "@fontsource/nunito/700.css";
+@import "@fontsource/nunito/800.css";
+@import "@fontsource/nunito/900.css";
+@import "tailwindcss";
+
+/* Cores e tipografia do brand book (discovery/brand-book-2026) */
+@theme {
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  --color-ciano: #1ec8e8;
+  --color-ciano-claro: #d4f6fb;
+  --color-ciano-suave: #eefbfd;
+  --color-petroleo: #0b7fa0;
+  --color-laranja: #ff5a1f;
+  --color-laranja-claro: #ffe9df;
+  --color-tinta: #1f2a33;
+  --color-nevoa: #f7fafb;
+  --color-borda: #dde9ee;
+  --color-cinza: #5b6b75;
+  --color-cinza-claro: #9aa8b1;
+  --color-perigo: #d93a3a;
+  --color-perigo-claro: #fdecec;
+}
+
+body {
+  background: var(--color-nevoa);
+  color: var(--color-tinta);
+}
