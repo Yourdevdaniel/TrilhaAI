@@ -4,7 +4,7 @@ Plataforma web que usa Inteligência Artificial para transformar um objetivo de 
 
 Projeto da disciplina de Engenharia de Requisitos e Modelagem de Software (Ciência da Computação e Engenharia de Software).
 
-**Protótipo no ar:** https://trilhaai-prototipo.vercel.app
+**Protótipo no ar:** https://trilhaai-demo.vercel.app
 
 > Este é um protótipo de demonstração. Não tem backend nem IA de verdade: as respostas da "IA" são simuladas e os dados ficam salvos no navegador.
 
