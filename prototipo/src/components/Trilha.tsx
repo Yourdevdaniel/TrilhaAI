@@ -1,7 +1,7 @@
 import { Check } from 'lucide-react'
 import type { ReactNode } from 'react'
-import type { EstadoMarco } from '../data/mock'
-import { cx } from './ui'
+import type { EstadoMarco } from '../data/tipos'
+import { atraso, cx } from './ui'
 
 export interface Marco {
   rotulo: ReactNode
@@ -29,12 +29,14 @@ export function Trilha({ marcos, compacta, className }: { marcos: Marco[]; compa
 
   return (
     <div className={cx('relative w-full', className)} style={{ height: altura + (compacta ? 40 : 52) }}>
-      <svg className="absolute inset-x-0 top-0 w-full" style={{ height: altura }} viewBox={`0 0 100 ${altura}`} preserveAspectRatio="none" aria-hidden="true">
+      <svg className="anim-revelar absolute inset-x-0 top-0 w-full" style={{ height: altura }} viewBox={`0 0 100 ${altura}`} preserveAspectRatio="none" aria-hidden="true">
         <path d={d} fill="none" stroke="#1ec8e8" strokeWidth="3" strokeDasharray="7 7" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
       </svg>
       {marcos.map((m, i) => (
         <div key={i} className="absolute flex -translate-x-1/2 flex-col items-center text-center" style={{ left: `${pontos[i].x}%`, top: pontos[i].y - (compacta ? 14 : 18) }}>
-          <Ponto estado={m.estado} pequeno={compacta} />
+          <span className="anim-pop" style={atraso(i)}>
+            <Ponto estado={m.estado} pequeno={compacta} />
+          </span>
           <span className={cx('mt-2 max-w-20 leading-tight font-semibold sm:max-w-none sm:whitespace-nowrap', compacta ? 'text-sm' : 'text-base', m.estado === 'atual' ? 'text-laranja font-bold' : 'text-tinta')}>{m.rotulo}</span>
           {m.detalhe && <span className={cx('text-sm', m.estado === 'atual' ? 'text-laranja' : m.estado === 'concluida' ? 'text-petroleo' : 'text-cinza')}>{m.detalhe}</span>}
         </div>
@@ -47,13 +49,13 @@ export function Ponto({ estado, pequeno }: { estado: EstadoMarco; pequeno?: bool
   const tam = pequeno ? 'size-7' : 'size-9'
   if (estado === 'concluida')
     return (
-      <span className={cx(tam, 'flex items-center justify-center rounded-full bg-ciano text-white')}>
+      <span key="feito" className={cx(tam, 'anim-carimbo flex items-center justify-center rounded-full bg-ciano text-white')}>
         <Check className="size-1/2" strokeWidth={3.5} />
       </span>
     )
   if (estado === 'atual')
     return (
-      <span className={cx(tam, 'flex items-center justify-center rounded-full bg-laranja ring-8 ring-laranja/15')}>
+      <span className={cx(tam, 'anim-pulso flex items-center justify-center rounded-full bg-laranja')}>
         <span className="size-2/5 rounded-full bg-white" />
       </span>
     )

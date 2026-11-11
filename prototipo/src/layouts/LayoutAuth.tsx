@@ -1,22 +1,30 @@
 import type { ReactNode } from 'react'
-import { Mascote, Wordmark } from './ui'
+import { atraso, Mascote, Wordmark } from '../components/ui'
 
-/** Telas sem sessão (01 e 02): painel ciano com o mascote à esquerda e o formulário à direita. */
+/** Telas sem sessão (login e cadastro): painel ciano com o mascote à esquerda e o formulário à direita. */
 export function LayoutAuth({ pose, frase, children }: { pose: 'de-pe' | 'caminho'; frase?: string; children: ReactNode }) {
   return (
     <div className="grid min-h-screen grid-cols-[minmax(0,1fr)] md:grid-cols-2">
       <div className="relative flex flex-col items-center justify-center overflow-hidden bg-ciano-claro px-6 py-10">
-        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <svg className="anim-revelar absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           <path d="M -5 72 C 15 55, 22 60, 30 62 S 55 70, 72 52 S 92 40, 105 38" fill="none" stroke="#1ec8e8" strokeWidth="3" strokeDasharray="8 8" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
         </svg>
         <div className="relative flex flex-col items-center text-center">
-          <Wordmark className="text-6xl md:text-7xl" />
-          {frase && <p className="mt-5 text-2xl text-tinta/80">{frase}</p>}
-          <Mascote pose={pose} className="mt-8 w-56 md:w-80" />
+          <span className="anim-subir">
+            <Wordmark className="text-6xl md:text-7xl" />
+          </span>
+          {frase && (
+            <p className="anim-subir mt-5 text-2xl text-tinta/80" style={atraso(1)}>
+              {frase}
+            </p>
+          )}
+          <span className="anim-subir" style={atraso(2)}>
+            <Mascote pose={pose} className="mt-8 w-56 md:w-80" flutuando />
+          </span>
         </div>
       </div>
       <div className="flex items-center justify-center bg-nevoa px-4 py-10">
-        <div className="w-full max-w-lg rounded-3xl border border-borda bg-white p-6 shadow-[0_20px_40px_-30px_rgba(11,127,160,0.35)] sm:p-8 md:p-12">{children}</div>
+        <div className="anim-subir w-full max-w-lg rounded-3xl border border-borda bg-white p-6 shadow-[0_20px_40px_-30px_rgba(11,127,160,0.35)] sm:p-8 md:p-12">{children}</div>
       </div>
     </div>
   )

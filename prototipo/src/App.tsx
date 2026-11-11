@@ -1,39 +1,53 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import LayoutApp from './components/LayoutApp'
-import Login from './pages/Login'
-import Cadastro from './pages/Cadastro'
-import Inicio from './pages/Inicio'
-import Conta from './pages/Conta'
-import MeusRoadmaps from './pages/MeusRoadmaps'
-import GerarRoadmap from './pages/GerarRoadmap'
-import RevisarExtracao from './pages/RevisarExtracao'
-import Roadmap from './pages/Roadmap'
-import GerarPlano from './pages/GerarPlano'
-import Plano from './pages/Plano'
-import Progresso from './pages/Progresso'
-import Avaliacao from './pages/Avaliacao'
-import Resultado from './pages/Resultado'
+import { Aviso } from './components/Aviso'
+import { Confete } from './components/Confete'
+import LayoutApp from './layouts/LayoutApp'
+import Login from './pages/auth/Login'
+import Cadastro from './pages/auth/Cadastro'
+import BoasVindas from './pages/onboarding/BoasVindas'
+import Inicio from './pages/inicio/Inicio'
+import Conta from './pages/conta/Conta'
+import MeusRoadmaps from './pages/roadmaps/MeusRoadmaps'
+import GerarRoadmap from './pages/roadmaps/GerarRoadmap'
+import RevisarExtracao from './pages/roadmaps/RevisarExtracao'
+import Roadmap from './pages/roadmaps/Roadmap'
+import GerarPlano from './pages/plano/GerarPlano'
+import Plano from './pages/plano/Plano'
+import Progresso from './pages/progresso/Progresso'
+import Avaliacao from './pages/avaliacao/Avaliacao'
+import Resultado from './pages/avaliacao/Resultado'
+import { useEstado } from './state/estado'
 
-// Cada rota corresponde a uma tela de discovery/telas-codex (número no comentário).
+function SoLogado({ children }: { children: React.ReactNode }) {
+  const { logado } = useEstado()
+  return logado ? children : <Navigate to="/" replace />
+}
+
 export default function App() {
+  const { logado } = useEstado()
   return (
-    <Routes>
-      <Route path="/" element={<Login />} /> {/* 01 */}
-      <Route path="/cadastro" element={<Cadastro />} /> {/* 02 */}
-      <Route element={<LayoutApp />}>
-        <Route path="/inicio" element={<Inicio />} /> {/* home A */}
-        <Route path="/conta" element={<Conta />} /> {/* 03 */}
-        <Route path="/roadmaps" element={<MeusRoadmaps />} /> {/* 04 */}
-        <Route path="/roadmaps/novo" element={<GerarRoadmap />} /> {/* 05 */}
-        <Route path="/roadmaps/novo/revisar" element={<RevisarExtracao />} /> {/* 06 */}
-        <Route path="/roadmaps/:id" element={<Roadmap />} /> {/* 07 */}
-        <Route path="/plano/novo" element={<GerarPlano />} /> {/* 08 */}
-        <Route path="/plano" element={<Plano />} /> {/* 09 */}
-        <Route path="/progresso" element={<Progresso />} /> {/* 10 */}
-        <Route path="/avaliacao" element={<Avaliacao />} /> {/* 11 */}
-        <Route path="/avaliacao/resultado" element={<Resultado />} /> {/* 12 */}
-      </Route>
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={logado ? <Navigate to="/inicio" replace /> : <Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+        <Route path="/boas-vindas" element={<SoLogado><BoasVindas /></SoLogado>} />
+        <Route element={<SoLogado><LayoutApp /></SoLogado>}>
+          <Route path="/inicio" element={<Inicio />} />
+          <Route path="/conta" element={<Conta />} />
+          <Route path="/roadmaps" element={<MeusRoadmaps />} />
+          <Route path="/roadmaps/novo" element={<GerarRoadmap />} />
+          <Route path="/roadmaps/novo/revisar" element={<RevisarExtracao />} />
+          <Route path="/roadmaps/:id" element={<Roadmap />} />
+          <Route path="/plano/novo" element={<GerarPlano />} />
+          <Route path="/plano" element={<Plano />} />
+          <Route path="/progresso" element={<Progresso />} />
+          <Route path="/avaliacao" element={<Avaliacao />} />
+          <Route path="/avaliacao/resultado" element={<Resultado />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Aviso />
+      <Confete />
+    </>
   )
 }

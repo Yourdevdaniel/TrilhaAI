@@ -5,7 +5,7 @@
 @import "@fontsource/nunito/900.css";
 @import "tailwindcss";
 
-/* Cores e tipografia do brand book (discovery/brand-book-2026) */
+/* Cores e tipografia do brand book */
 @theme {
   --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
@@ -28,4 +28,102 @@
 body {
   background: var(--color-nevoa);
   color: var(--color-tinta);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Animações ---------- */
+:root {
+  --suave: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --mola: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes subir {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes surgir {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  0% { opacity: 0; transform: scale(0.3); }
+  70% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes revelar {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes flutuar {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-10px) rotate(-1.5deg); }
+}
+@keyframes pulso {
+  0% { box-shadow: 0 0 0 0 rgb(255 90 31 / 0.45); }
+  100% { box-shadow: 0 0 0 16px rgb(255 90 31 / 0); }
+}
+@keyframes marchar {
+  to { stroke-dashoffset: -28; }
+}
+@keyframes cair {
+  0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate3d(var(--dx), 110vh, 0) rotate(var(--giro)); opacity: 0.9; }
+}
+@keyframes aviso {
+  from { opacity: 0; transform: translate(-50%, 24px) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+@keyframes modal {
+  from { opacity: 0; transform: translateY(14px) scale(0.95); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes carimbo {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+@keyframes brilho {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@keyframes tremer {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+.anim-pagina { animation: subir 0.45s var(--suave) both; }
+.anim-subir { animation: subir 0.55s var(--suave) both; animation-delay: calc(var(--i, 0) * 70ms); }
+.anim-surgir { animation: surgir 0.4s ease both; }
+.anim-pop { animation: pop 0.5s var(--mola) both; animation-delay: calc(var(--i, 0) * 110ms + 200ms); }
+.anim-revelar { animation: revelar 1.1s var(--suave) both; }
+.anim-flutuar { animation: flutuar 4s ease-in-out infinite; }
+.anim-pulso { animation: pulso 1.6s ease-out infinite; }
+.anim-marchar { animation: marchar 1.2s linear infinite; }
+.anim-modal { animation: modal 0.3s var(--mola) both; }
+.anim-aviso { animation: aviso 0.4s var(--mola) both; }
+.anim-carimbo { animation: carimbo 0.35s var(--mola); }
+.anim-tremer { animation: tremer 0.45s both; }
+.texto-brilho {
+  background: linear-gradient(90deg, var(--color-petroleo) 0%, var(--color-ciano) 40%, var(--color-petroleo) 60%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brilho 2.2s linear infinite;
+}
+.confete {
+  position: absolute;
+  top: -12px;
+  animation: cair var(--dur) cubic-bezier(0.25, 0.6, 0.4, 1) forwards;
+  animation-delay: var(--atraso);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

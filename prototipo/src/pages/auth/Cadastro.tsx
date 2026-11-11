@@ -1,15 +1,17 @@
-import { Eye, IdCard, Lock, Mail, User } from 'lucide-react'
+import { Eye, EyeOff, IdCard, Lock, Mail, User } from 'lucide-react'
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutAuth } from '../components/LayoutAuth'
-import { Botao, cx } from '../components/ui'
-import { cpfJaCadastrado } from '../data/mock'
+import { Botao, cx } from '../../components/ui'
+import { CPF_JA_CADASTRADO } from '../../data/seed'
+import { LayoutAuth } from '../../layouts/LayoutAuth'
+import { useEstado } from '../../state/estado'
 
 type CampoNome = 'nome' | 'cpf' | 'email' | 'senha' | 'confirmar'
 
-// Tela 02 · UC01.1 Cadastrar usuário
+// UC01.1 Cadastrar usuário
 export default function Cadastro() {
   const navegar = useNavigate()
+  const { cadastrar, avisar } = useEstado()
   const [dados, setDados] = useState<Record<CampoNome, string>>({ nome: '', cpf: '', email: '', senha: '', confirmar: '' })
   const [termos, setTermos] = useState(false)
   const [erros, setErros] = useState<Partial<Record<CampoNome | 'termos', string>>>({})
@@ -23,17 +25,27 @@ export default function Cadastro() {
     e.preventDefault()
     const novos: typeof erros = {}
     for (const campo of Object.keys(dados) as CampoNome[]) if (!dados[campo].trim()) novos[campo] = 'Campo obrigatório.'
-    if (dados.cpf === cpfJaCadastrado) novos.cpf = 'Este CPF já está cadastrado.'
+    if (dados.cpf && dados.cpf.length < 14) novos.cpf = 'CPF incompleto.'
+    if (dados.email && !/^\S+@\S+\.\S+$/.test(dados.email)) novos.email = 'E-mail inválido.'
+    if (dados.senha && dados.senha.length < 6) novos.senha = 'Use pelo menos 6 caracteres.'
     if (dados.senha && dados.confirmar && dados.senha !== dados.confirmar) novos.confirmar = 'As senhas não conferem.'
     if (!termos) novos.termos = 'Aceite os termos para continuar.'
+    if (Object.keys(novos).length === 0) {
+      const nomeCompleto = dados.nome.trim()
+      const duplicado = cadastrar({ nome: nomeCompleto.split(' ')[0], nomeCompleto, email: dados.email.trim(), cpf: dados.cpf })
+      if (duplicado) Object.assign(novos, duplicado)
+    }
     setErros(novos)
-    if (Object.keys(novos).length === 0) navegar('/inicio')
+    if (Object.keys(novos).length === 0) {
+      avisar({ texto: 'Conta criada! Bem-vindo(a) ao TrilhaAi.', tipo: 'festa' })
+      navegar('/boas-vindas')
+    }
   }
 
   return (
     <LayoutAuth pose="caminho">
       <h1 className="mb-8 text-center text-5xl font-black">Criar conta</h1>
-      <form onSubmit={criar} className="space-y-4" noValidate>
+      <form onSubmit={criar} className={cx('space-y-4', Object.keys(erros).some((k) => erros[k as keyof typeof erros]) && 'anim-tremer')} key={JSON.stringify(erros)} noValidate>
         <Entrada icone={<User />} placeholder="Nome completo" valor={dados.nome} onMudar={mudar('nome')} erro={erros.nome} />
         <Entrada icone={<IdCard />} placeholder="CPF" valor={dados.cpf} onMudar={mudar('cpf')} erro={erros.cpf} inputMode="numeric" />
         <Entrada icone={<Mail />} placeholder="E-mail" tipo="email" valor={dados.email} onMudar={mudar('email')} erro={erros.email} />
@@ -54,7 +66,7 @@ export default function Cadastro() {
           Entrar
         </Link>
       </p>
-      <p className="mt-4 text-center text-sm text-cinza">Protótipo: o CPF {cpfJaCadastrado} simula um cadastro duplicado.</p>
+      <p className="mt-4 text-center text-sm text-cinza">Demonstração: o CPF {CPF_JA_CADASTRADO} simula um cadastro duplicado.</p>
     </LayoutAuth>
   )
 }
@@ -67,12 +79,12 @@ function Entrada({ icone, placeholder, valor, onMudar, erro, tipo = 'text', olho
         <span className="text-petroleo [&>svg]:size-6">{icone}</span>
         <input aria-label={placeholder} type={olho && ver ? 'text' : tipo} placeholder={placeholder} value={valor} onChange={(e) => onMudar(e.target.value)} inputMode={inputMode} className="min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-cinza" />
         {olho && (
-          <button type="button" aria-label="Mostrar senha" onClick={() => setVer(!ver)} className="text-petroleo">
-            <Eye className="size-6" />
+          <button type="button" aria-label={ver ? 'Ocultar senha' : 'Mostrar senha'} onClick={() => setVer(!ver)} className="text-petroleo">
+            {ver ? <EyeOff className="size-6" /> : <Eye className="size-6" />}
           </button>
         )}
       </div>
-      {erro && <p className="mt-1.5 text-perigo">{erro}</p>}
+      {erro && <p className="anim-surgir mt-1.5 text-perigo">{erro}</p>}
     </div>
   )
 }
