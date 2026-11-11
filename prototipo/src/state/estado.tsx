@@ -86,7 +86,9 @@ function useEstadoInterno() {
         mudar((d) => ({ ...d, logado: true }))
         return null
       }
-      return 'E-mail ou senha incorretos.'
+      // Login de mentirinha: qualquer outro e-mail entra na conta de demonstração
+      setDados(inicial(true))
+      return null
     },
     [dados.usuario.email, mudar],
   )
